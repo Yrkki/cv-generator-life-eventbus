@@ -1,0 +1,8 @@
+# Provate Files
+.other
+
+# System Files
+Thumbs.db
+
+# Convenience Files
+*.lnk
