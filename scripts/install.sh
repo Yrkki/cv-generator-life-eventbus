@@ -6,12 +6,14 @@ scriptDescription='Event Bus Install'
 . "$scripts"/start.sh
 
 command='list'
-# command='go'
+if [[ "$1" == 'go' ]]; then
+    command='go'
+fi
 . "$scripts"/warn.sh "Using the "$'\033[0;35m'"""$command"""$'\033[0;33m'" command."
 echo
 
 location=../
-. "$scripts"/detail.sh "Using the "$'\033[0;35m'"""$location"""$'\033[1;30m'" task scheduler folder."
+. "$scripts"/detail.sh "Using the "$'\033[0;35m'"""$location"""$'\033[1;30m'" task definitions location folder."
 
 extension=xml
 . "$scripts"/detail.sh "Using the "$'\033[0;35m'"""$extension"""$'\033[1;30m'"-type task definitions."
@@ -27,13 +29,15 @@ for i in "${!taskDefinitions[@]}"; do
     taskDefinition="${taskDefinitions[$i]}"
 
     taskPath="${taskDefinition/$location/}"
+    taskPath="${taskPath/\.$extension/}"
     taskPath="${taskPath////\\}"
 
+    . "$scripts"/info.sh "Creating a "$'\033[0;32m'"""$taskPath"""$'\033[1;30m'" task..."
     if [[ "$command" == 'go' ]]; then
         schtasks.exe -create -TN "$taskPath" -XML "$taskDefinition"
+        . "$scripts"/detail.sh "  Created a "$'\033[0;32m'"""$taskPath"""$'\033[1;30m'" task."
+        echo
     fi
-
-    . "$scripts"/detail.sh "Created a "$'\033[0;32m'"""$taskPath"""$'\033[1;30m'" task."
 done
 echo
 
